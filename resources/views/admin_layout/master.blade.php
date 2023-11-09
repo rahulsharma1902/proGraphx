@@ -50,14 +50,42 @@
                                 <li class="nk-menu-item has-sub">
                                     <a href="#" class="nk-menu-link nk-menu-toggle">
                                         <span class="nk-menu-icon"><em class="icon ni ni-tranx"></em></span>
-                                        <span class="nk-menu-text">Categories</span>
+                                        <span class="nk-menu-text">Brands</span>
                                     </a>
                                     <ul class="nk-menu-sub">
                                         <li class="nk-menu-item">
-                                            <a href="{{ url('admin-dashboard/categories') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
+                                            <a href="{{ url('admin-dashboard/brands') }}" class="nk-menu-link"><span class="nk-menu-text">View</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ url('admin-dashboard/add-category') }}" class="nk-menu-link"><span class="nk-menu-text">Add New Category</span></a>
+                                            <a href="{{ url('admin-dashboard/add-brand') }}" class="nk-menu-link"><span class="nk-menu-text">Add</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nk-menu-item has-sub">
+                                    <a href="#" class="nk-menu-link nk-menu-toggle">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-tranx"></em></span>
+                                        <span class="nk-menu-text">Colors</span>
+                                    </a>
+                                    <ul class="nk-menu-sub">
+                                        <li class="nk-menu-item">
+                                            <a href="{{ url('admin-dashboard/colors') }}" class="nk-menu-link"><span class="nk-menu-text">View</span></a>
+                                        </li>
+                                        <li class="nk-menu-item">
+                                            <a href="{{ url('admin-dashboard/add-color') }}" class="nk-menu-link"><span class="nk-menu-text">Add</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nk-menu-item has-sub">
+                                    <a href="#" class="nk-menu-link nk-menu-toggle">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-tranx"></em></span>
+                                        <span class="nk-menu-text">Graphics</span>
+                                    </a>
+                                    <ul class="nk-menu-sub">
+                                        <li class="nk-menu-item">
+                                            <a href="{{ url('admin-dashboard/graphic') }}" class="nk-menu-link"><span class="nk-menu-text">View</span></a>
+                                        </li>
+                                        <li class="nk-menu-item">
+                                            <a href="{{ url('admin-dashboard/add-graphic') }}" class="nk-menu-link"><span class="nk-menu-text">Add</span></a>
                                         </li>
                                     </ul>
                                 </li>
