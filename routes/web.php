@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminDashController;
 use App\Http\Controllers\Admin\ColorsController;
 use App\Http\Controllers\Admin\BrandsController;
+use App\Http\Controllers\Admin\ModalsController;
 use App\Http\Controllers\Admin\GraphicsController;
 
 /*
@@ -59,8 +60,20 @@ Route::group(['middleware'=>['auth','admin']],function(){
     Route::get('colorsRemove/{slug}',[ColorsController::class,'removeColor']);
 
     //GraphicsController
+    Route::get('admin-dashboard/graphics',[GraphicsController::class,'index']);
     Route::get('admin-dashboard/add-graphic',[GraphicsController::class,'addGraphic']);
     Route::post('addGraphicProcc',[GraphicsController::class,'addGraphicProcc']);
+    Route::get('admin-dashboard/graphic-edit/{slug}',[GraphicsController::class,'updateGraphic']);
+    Route::post('updateGraphicProcc',[GraphicsController::class,'updateGraphicProcc']);
+    Route::get('graphicRemove/{slug}',[GraphicsController::class,'removeGraphic']);
+
+
+    //ModalsController
+    Route::get('admin-dashboard/add-modal',[ModalsController::class,'addModal']);
+    Route::post('addModalProcc',[ModalsController::class,'addModalProcc']);
+
+    Route::get('admin-dashboard/add-modal/{slug}',[ModalsController::class,'addModalBodyPart']);
+
 });
 
 /* Admin Routes End :: */

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Brand;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 class BrandsController extends Controller
 {
     public function index(){
@@ -26,7 +28,7 @@ class BrandsController extends Controller
         $brand->slug = $request->slug;
         if($request->hasFile('image')){
             $file = $request->file('image');
-            $filename = $request->title.rand(0,100).'.'.$file->extension();
+            $filename = $request->name.rand(0,100).'.'.$file->extension();
             $file->move(public_path().'/brands_images/', $filename);
             $brand->image = $filename;  
         }else{

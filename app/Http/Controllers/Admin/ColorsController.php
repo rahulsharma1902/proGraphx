@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Colors;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 class ColorsController extends Controller
 {
     public function index(){

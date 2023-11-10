@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('graphics', function (Blueprint $table) {
+        Schema::create('modals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->string('material');
-            $table->string('image');
-            $table->integer('status')->default(1);
+            $table->string('brand');
+            $table->string('available_graphics');
+            $table->text('description');
+            $table->string('side_image');
+            $table->string('front_image');
+            $table->string('top_image');
+            $table->integer('status')->default(0); //O pending 1 wokring
             $table->timestamps();
         });
     }
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('graphics');
+        Schema::dropIfExists('modals');
     }
 };
