@@ -107,7 +107,7 @@
                             <div class="form-control-wrap">
                                 <input type="file" class="form-control" id="side_image" name="side_image">
                             </div>
-                        </div>
+                        </div> 
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
