@@ -56,14 +56,18 @@ class ModalsController extends Controller
         }
     
         $modals->save();
-        return redirect()->back()->with('success', 'Your Graphics has been added.');
+        return redirect('admin-dashboard/add-modal/'.$request->slug)->with('success', 'Your Graphics has been added.');
+
     }
 
     public function addModalBodyPart($slug){
         if($slug){
             $modal = Modals::where('slug',$slug)->where('status',0)->first();
+            $colors = Colors::all();
+            $brands = Brand::all();
+            $graphics = Graphics::all();
             if($modal){
-                return view('admin.modals.addModalBodyPart',compact('modal'));
+                return view('admin.modals.addModalBodyPart',compact('modal','colors','brands','graphics'));
             }
         }
         return redirect()->back()->with('error','Failed to Find your Model..');
