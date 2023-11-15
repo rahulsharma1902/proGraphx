@@ -131,7 +131,7 @@
             $(this).attr('fill', 'red').addClass('body_parts1');
 
             console.log(fillColor);
-        });
+        }); 
     });
 });
 
