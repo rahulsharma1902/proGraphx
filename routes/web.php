@@ -73,6 +73,7 @@ Route::group(['middleware'=>['auth','admin']],function(){
     Route::post('addModalProcc',[ModalsController::class,'addModalProcc']);
 
     Route::get('admin-dashboard/add-modal/{slug}',[ModalsController::class,'addModalBodyPart']);
+    Route::post('addModalBodyPartProcc',[ModalsController::class,'addModalBodyPartProcc']);
 
 });
 

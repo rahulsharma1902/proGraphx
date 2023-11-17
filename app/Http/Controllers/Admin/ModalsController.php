@@ -85,5 +85,10 @@ class ModalsController extends Controller
         }
         return null;
     }
+
+    public function addModalBodyPartProcc(Request $request){
+        print_r($request->all());
+        echo '<pre>';
+    }
 }
 

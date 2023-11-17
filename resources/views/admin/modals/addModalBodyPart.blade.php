@@ -19,7 +19,7 @@
             <div class="card-head">
                 <h5 class="card-title">Modal Upload</h5>
             </div>
-            <form action="{{ url('addModalBodyPartProcc') ?? '' }}" method="post" enctype="multipart/form-data">
+            <form id="modelBodyForm" action="{{ url('addModalBodyPartProcc') ?? '' }}" method="post" enctype="multipart/form-data">
                 @csrf
                 
                 <div class="row g-4">
@@ -41,13 +41,13 @@
                                         <div class="form-group">
                                             <label class="form-label" for="title">Body Part Title</label>
                                             <div class="form-control-wrap">
-                                                <input type="text" class="form-control bodyTitle" id="title" placeholder="Title">
+                                                <input type="text" class="form-control bodyTitle" name="brandTitle[]" id="title" placeholder="Title">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="image">Body Part Image</label>
                                             <div class="form-control-wrap">
-                                                <input type="file" class="form-control" id="image" placeholder="Body Part Image">
+                                                <input type="file" class="form-control" id="image" name="brandImage[]" placeholder="Body Part Image">
                                             </div>
                                         </div>
                                         <div class="accentArea"></div>
@@ -96,7 +96,26 @@
         </div>
     </div>
 </div> -->
+<script>
+$(document).ready(function () {
+    $('#modelBodyForm').submit(function (e) {
+        e.preventDefault();
+        $('input:disabled').prop('disabled', false);
+        var formData = $('#modelBodyForm').serializeArray();
 
+        // Print form data to the console :: => ::
+        console.log(formData);
+    
+       
+
+        // If you want to display the form data on the page, you can do something like this:
+        // formData.forEach(function (field) {
+        //     console.log(field.name + ': ' + field.value);
+        // });
+    });
+});
+
+</script>
 <script>
     $(document).ready(function () {
     var imageSelectionActive = false;
@@ -128,8 +147,15 @@
             return false;
         }
     }
-    var dinamicClass = title+$(this).attr('data-class');
-    console.log(dinamicClass);
+    // var dinamicClass = title+$(this).attr('data-class');
+    var dinamicClass = ((title || '').trim() + ($(this).attr('data-class') || '').trim()).toLowerCase();
+
+    console.warn(dinamicClass);
+
+    console.log($(this).attr('data-class'));
+    console.log(title);
+
+    console.warn(dinamicClass);
 
     inputElement.attr('disabled', true);
     $('.svgObject:first').attr('id', 'svgObject');
@@ -153,11 +179,16 @@
                 $(svgDoc).find('path').on('click', function () {
                     if (imageSelectionActive) {
                         var oldColor = $(this).attr('fill');
-                        if(oldColor == 'red'){
-                            $(this).attr('fill', 'red').addClass(dinamicClass); 
-                        }else{
-                            $(this).attr('fill', 'red').addClass(dinamicClass).attr('old-color',oldColor);
-                        }
+                        // var selected = $(this).attr('data-selected');
+                        // if(selected == "done"){
+                        //     alert('This area Is already Selected.');
+                        // }else{
+                            if(oldColor == 'red'){
+                                $(this).attr('fill', 'red').addClass(dinamicClass).attr('data-selected','done'); 
+                            }else{
+                                $(this).attr('fill', 'red').addClass(dinamicClass).attr('old-color',oldColor).attr('data-selected','done');
+                            }
+                        // }
                         
                     }
                 });
@@ -424,7 +455,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="accentTitle${accentCount}">Accent Title</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control ${title} accetntTitle" id="accentTitle${accentCount}" placeholder="Accent Title">
+                                            <input type="text" name="accentTitle[]" class="form-control ${title} accetntTitle" id="accentTitle${accentCount}" placeholder="Accent Title">
                                         </div>
                                     </div>
                                     <div class="form-group">
