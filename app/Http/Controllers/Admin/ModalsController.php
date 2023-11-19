@@ -86,9 +86,40 @@ class ModalsController extends Controller
         return null;
     }
 
-    public function addModalBodyPartProcc(Request $request){
-        print_r($request->all());
-        echo '<pre>';
+    // public function addModalBodyPartProcc(Request $request){
+        // echo '<pre>';
+        // print_r($request->all());
+    // }
+    public function addModalBodyPartProcc(Request $request)
+    {
+        // echo '<pre>';
+        // print_r($request->all());
+        $brandsData = 0;
+    
+        foreach ($request->brandTitle as $brandKey => $brandTitle) {
+            echo $brandTitle;
+    
+            if (isset($request->accentTitle[$brandTitle]) && is_array($request->accentTitle[$brandTitle])) {
+                foreach ($request->accentTitle[$brandTitle] as $key => $accentTitle) {
+                    echo $accentTitle;
+    
+                    $brandsData++;
+    
+                    $brandArrayKey = $brandTitle . $brandsData;
+    
+                    if (isset($request->brand[$brandArrayKey]) && is_array($request->brand[$brandArrayKey])) {
+                        foreach ($request->brand[$brandArrayKey] as $brand) {
+                            echo $brand;
+                        }
+                    }
+                }
+            }
+    
+            echo '<br>';
+        }
     }
+    
+
+
 }
 

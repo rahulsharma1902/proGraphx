@@ -97,23 +97,34 @@
     </div>
 </div> -->
 <script>
-$(document).ready(function () {
-    $('#modelBodyForm').submit(function (e) {
-        e.preventDefault();
-        $('input:disabled').prop('disabled', false);
-        var formData = $('#modelBodyForm').serializeArray();
+    $(document).ready(function () {
+        $('#modelBodyForm').submit(function (e) {
+            // e.preventDefault();  // Prevents the default form submission behavior
 
-        // Print form data to the console :: => ::
-        console.log(formData);
+            $('input:disabled').prop('disabled', false);  // Enables all disabled inputs
+
+            var formData = $('#modelBodyForm').serializeArray();
+            $(formData).submit();  // Manually triggers the form submission
+        });
+    });
+
+// $(document).ready(function () {
+//     $('#modelBodyForm').submit(function (e) {
+//         e.preventDefault();
+//         $('input:disabled').prop('disabled', false);
+//         // var formData = $('#modelBodyForm').serializeArray();
+//         $(this).submit();
+//         // // Print form data to the console :: => ::
+//         // console.log(formData);
     
        
 
-        // If you want to display the form data on the page, you can do something like this:
-        // formData.forEach(function (field) {
-        //     console.log(field.name + ': ' + field.value);
-        // });
-    });
-});
+//         // If you want to display the form data on the page, you can do something like this:
+//         // formData.forEach(function (field) {
+//         //     console.log(field.name + ': ' + field.value);
+//         // });
+//     });
+// });
 
 </script>
 <script>
@@ -455,7 +466,7 @@ $(document).ready(function () {
                                     <div class="form-group">
                                         <label class="form-label" for="accentTitle${accentCount}">Accent Title</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" name="accentTitle[]" class="form-control ${title} accetntTitle" id="accentTitle${accentCount}" placeholder="Accent Title">
+                                            <input type="text" name="accentTitle[${title}][]" class="form-control ${title} accetntTitle" id="accentTitle${accentCount}" placeholder="Accent Title">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -465,7 +476,7 @@ $(document).ready(function () {
                                         @enderror
                                         @foreach ($colors as $color)
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" value="{{ $color->id ?? '' }}" class="custom-control-input" id="color{{ $color->id ?? '' }}${title}${accentCount}" name="brand[]">
+                                                <input type="checkbox" value="{{ $color->id ?? '' }}" class="custom-control-input" id="color{{ $color->id ?? '' }}${title}${accentCount}" name="brand[${title}${accentCount}][]">
                                                 <label class="custom-control-label" for="color{{ $color->id ?? '' }}${title}${accentCount}">{{ $color->name ?? '' }}</label>
                                             </div>
                                         @endforeach
