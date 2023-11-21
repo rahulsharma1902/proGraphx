@@ -21,7 +21,7 @@
             </div>
             <form id="modelBodyForm" action="{{ url('addModalBodyPartProcc') ?? '' }}" method="post" enctype="multipart/form-data">
                 @csrf
-                
+                <input type="hidden" name="model_id" value="{{ $modal->id ?? '' }}">
                 <div class="row g-4">
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -41,13 +41,17 @@
                                         <div class="form-group">
                                             <label class="form-label" for="title">Body Part Title</label>
                                             <div class="form-control-wrap">
-                                                <input type="text" class="form-control bodyTitle" name="brandTitle[]" id="title" placeholder="Title">
+                                                <input type="text" class="form-control bodyTitle" name="brandTitle[]" id="title" placeholder="Title" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <input type="hidden" class="form-control slug" name="slug[]" id="slug" placeholder="SLUG">
+                                        </div>
+                                        
+                                        <div class="form-group">
                                             <label class="form-label" for="image">Body Part Image</label>
                                             <div class="form-control-wrap">
-                                                <input type="file" class="form-control" id="image" name="brandImage[]" placeholder="Body Part Image">
+                                                <input type="file" class="form-control bodyImage" id="image" name="brandImage[]" placeholder="Body Part Image" required>
                                             </div>
                                         </div>
                                         <div class="accentArea"></div>
@@ -69,7 +73,7 @@
                     
                     <div class="col-12 text-center">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-lg btn-primary">Next <span style="margin-left: 1rem;" class="mr-3"><i class="fas fa-long-arrow-alt-right"></i></span></button>
+                            <button type="submit" class="btn btn-lg btn-primary">DONE</button>
                         </div>
                     </div>
                 </div>
@@ -97,34 +101,70 @@
     </div>
 </div> -->
 <script>
-    $(document).ready(function () {
-        $('#modelBodyForm').submit(function (e) {
-            // e.preventDefault();  // Prevents the default form submission behavior
+   $(document).ready(function () {
+        // Attach keyup event to a parent element (document in this case)
+        $(document).on('keyup', '.bodyTitle', function () {
+            // Get the value of the current bodyTitle input
+            var titleValue = $(this).val();
 
-            $('input:disabled').prop('disabled', false);  // Enables all disabled inputs
+            // Remove white spaces and convert to lowercase
+            var slugValue = titleValue.replace(/\s/g, '').toLowerCase();
 
-            var formData = $('#modelBodyForm').serializeArray();
-            $(formData).submit();  // Manually triggers the form submission
+            // Update the value of the corresponding slug input
+            $(this).closest('.form-group').next().find('.slug').val(slugValue);
         });
     });
+</script>
+<script>
 
-// $(document).ready(function () {
-//     $('#modelBodyForm').submit(function (e) {
-//         e.preventDefault();
-//         $('input:disabled').prop('disabled', false);
-//         // var formData = $('#modelBodyForm').serializeArray();
-//         $(this).submit();
-//         // // Print form data to the console :: => ::
-//         // console.log(formData);
-    
-       
+$(document).ready(function () {
+    $('#modelBodyForm').submit(function (e) {
+        e.preventDefault();  
+        var hasError = false;
 
-//         // If you want to display the form data on the page, you can do something like this:
-//         // formData.forEach(function (field) {
-//         //     console.log(field.name + ': ' + field.value);
-//         // });
-//     });
-// });
+        $('input[type="text"]').each(function () {
+            if ($(this).val().trim() === '') {
+                hasError = true;
+                $(this).addClass('required');
+
+            } else {
+                $(this).removeClass('required');
+            }
+        });
+            if (hasError) {
+                var firstEmptyField = $('input[type="text"].required:first');
+                $('html, body').animate({
+                    scrollTop: firstEmptyField.offset().top - 100 
+                }, 500);
+
+                NioApp.Toast('Please fill all required fields.', 'error', {position: 'top-right'});
+                return false;
+            }
+        setTimeout(function () {
+            var svgObjects = document.getElementsByClassName('svgObject');
+            if (svgObjects.length > 0) {
+                var svgObject = svgObjects[0]; 
+                var svgDoc = svgObject.contentDocument;
+
+                if (svgDoc) {
+                    var xmlSerializer = new XMLSerializer();
+                    var svgString = xmlSerializer.serializeToString(svgDoc);
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'updatedSVG',
+                        value: svgString
+                    }).appendTo('#modelBodyForm');
+                    $('input:disabled').prop('disabled', false);
+                    $('#modelBodyForm').unbind('submit').submit();
+                }
+            } else {
+                // console.log('No elements with the class "svgObject" found.');
+                NioApp.Toast('Failed to find you image', 'error', {position: 'top-right'});
+            }
+        }, 100);
+    });
+});
+
 
 </script>
 <script>
@@ -135,12 +175,16 @@
     var bodyPart = $(this).closest('.accentCol');
     var remove = bodyPart.find('.removeAccent');
     var inputElement = bodyPart.find('input[type="text"]');
-    console.log(inputElement.val());
+    var inputColor = bodyPart.find('input[type="checkbox"]');
+    // console.log(inputElement.val());
     var Pathclass = $(this).attr('data-class');
     var title = bodyPart.find('input[type="text"].' + Pathclass).val();
-
+    // var title = inputElement.val();
+        // console.log(Pathclass);
+        // console.log(title);
     if (title == '') {
-        alert('Please add your title first.');
+        // alert('Please add your title first.');
+        NioApp.Toast('Please add your title first.', 'error', {position: 'top-right'});
         return false;
     }
 
@@ -148,29 +192,33 @@
         var countVal = 0;
 
         $(".accentCol input[type='text']." + Pathclass + ":disabled").each(function () {
+            // console.log($(this).val().trim());
             if ($(this).val().trim() === title.trim()) {
                 countVal++;
+                // console.warn(title.trim());
             }
         });
 
         if (countVal > 0) {
-            alert('Please try a unique title.');
+            // alert('Please try a unique title.');
+            NioApp.Toast('Please try a unique title.', 'error', {position: 'top-right'});
             return false;
         }
     }
-    // var dinamicClass = title+$(this).attr('data-class');
-    var dinamicClass = ((title || '').trim() + ($(this).attr('data-class') || '').trim()).toLowerCase();
+    var dinamicClass = title + $(this).attr('data-class');
+    dinamicClass = dinamicClass.replace(/\s/g, '').toLowerCase();
+    // console.warn(dinamicClass);
 
-    console.warn(dinamicClass);
+    
+    // console.log($(this).attr('data-class'));
+    // console.log(title);
 
-    console.log($(this).attr('data-class'));
-    console.log(title);
 
-    console.warn(dinamicClass);
+    // console.warn(dinamicClass);
 
     inputElement.attr('disabled', true);
     $('.svgObject:first').attr('id', 'svgObject');
-    console.log($(this).html());
+    // console.log($(this).html());
     $(this).html("Done").addClass('doneAreaSelection').removeClass('selectImageArea').attr('dinamicClass',dinamicClass);
     remove.attr('dinamicClass',dinamicClass);
     imageSelectionActive = true;
@@ -180,33 +228,37 @@
         }
     });
 
-        // After setting the ID, wait for a short delay to ensure the content is loaded
-        setTimeout(function () {
-            var svgObject = document.getElementById('svgObject');
-            var svgDoc = svgObject.contentDocument;
-           
-            // Check if the SVG content is available
-            if (svgDoc) {
-                $(svgDoc).find('path').on('click', function () {
-                    if (imageSelectionActive) {
-                        var oldColor = $(this).attr('fill');
-                        // var selected = $(this).attr('data-selected');
-                        // if(selected == "done"){
-                        //     alert('This area Is already Selected.');
-                        // }else{
-                            if(oldColor == 'red'){
-                                $(this).attr('fill', 'red').addClass(dinamicClass).attr('data-selected','done'); 
-                            }else{
-                                $(this).attr('fill', 'red').addClass(dinamicClass).attr('old-color',oldColor).attr('data-selected','done');
-                            }
-                        // }
-                        
+    setTimeout(function () {
+        var svgObject = document.getElementById('svgObject');
+        var svgDoc = svgObject.contentDocument;
+
+        // Check if the SVG content is available
+        if (svgDoc) {
+            // Remove previous click event handlers
+            $(svgDoc).find('path').off('click');
+
+            $(svgDoc).find('path').on('click', function () {
+                if (imageSelectionActive) {
+                    console.warn(dinamicClass);
+                    console.warn(dinamicClass.length);
+                    var oldColor = $(this).attr('fill');
+                    if($(this).attr('data-selected') == 'done'){
+                        NioApp.Toast('This Image Area has been already selected.', 'error', { position: 'top-right' });
+                    }else{
+                        if (oldColor == 'red') {
+                            $(this).attr('fill', 'red').addClass(dinamicClass).attr('data-selected', 'done');
+                        } else {
+                            $(this).attr('fill', 'red').addClass(dinamicClass).attr('old-color', oldColor).attr('data-selected', 'done');
+                        }
                     }
-                });
-            } else {
-                console.log('SVG content not yet loaded.');
-            }
-        }, 100);
+                }
+            });
+        } else {
+            NioApp.Toast('Your Image is not loaded yet.', 'error', { position: 'top-right' });
+            // console.log('SVG content not yet loaded.');
+        }
+    }, 100);
+
     });
 
     $('body').on("click", ".doneAreaSelection", function () {
@@ -217,7 +269,7 @@
         var pathsWithDclass = $('path.' + Dclass);
 
         // Now pathsWithDclass contains all path elements with the specified Dclass
-        console.log('Paths with class ' + Dclass + ':', pathsWithDclass);
+        // console.log('Paths with class ' + Dclass + ':', pathsWithDclass);
         var svgObject = document.getElementById('svgObject');
 
         // Wait for a short delay to ensure the content is loaded
@@ -228,7 +280,7 @@
         // Check if the SVG content is available
         if (svgDoc) {
             var allPaths = $(svgDoc).find('path');
-
+            console.warn(allPaths);
             allPaths.each(function () {
                 if ($(this).hasClass(Dclass)) {
                     var oldColor = $(this).attr('old-color');
@@ -237,7 +289,7 @@
                 }
             });
 
-            console.log(allPaths);
+            // console.log(allPaths);
         } else {
             console.log('SVG content not yet loaded.');
         }
@@ -259,107 +311,6 @@
     // });
 });
 
-    // $(document).ready(function() {
-    //     $('#svgObject').on('load', function() {
-    //         var svgDoc = $('#svgObject')[0].contentDocument;
-
-    //         $(svgDoc).find('path').on('click', function() {
-    //             $(this).attr('fill', 'red').addClass('body_parts1');
-    //         });
-    //     });
-    // });
-
-    // $(document).ready(function () {
-    // $("body").on("click", ".selectImageArea", function () {
-    //     console.log("Clicked");
-
-    //     $('.svgObject:first').attr('id', 'svgObject');
-    //     console.log('click');
-
-    //     // After setting the ID, wait for a short delay to ensure the content is loaded
-    //     setTimeout(function () {
-    //         var svgObject = document.getElementById('svgObject');
-    //         var svgDoc = svgObject.contentDocument;
-
-    //         // Check if the SVG content is available
-    //         if (svgDoc) {
-    //             $(svgDoc).find('path').on('click', function () {
-    //                 $(this).attr('fill', 'red').addClass('body_parts1');
-    //             });
-    //         } else {
-    //             console.log('SVG content not yet loaded.');
-    //         }
-    //     }, 100);
-    // });
-
-    // $("body").on("click", ".svgObject", function () {
-    //     console.log('click..');
-    //     // Handle click on the SVG object if needed
-    // });
-    // $('body').on("click", ".doneAreaSelection", function () {
-    //     svgChangeEnabled = !svgChangeEnabled;
-
-    //     // Optionally, you can remove the 'svgObject' ID when changes are disabled
-    //     if (!svgChangeEnabled) {
-    //         $('.svgObject:first').removeAttr('id');
-    //     }
-
-    //     console.log('Changes to image paths and class are ' + (svgChangeEnabled ? 'enabled' : 'disabled'));
-    // });
-// });
-
-
-    // $(document).ready(function () {
-    // var fillColor = '';
-
-    // $('#svgObject').on('load', function () {
-    //     var svgDoc = $('#svgObject')[0].contentDocument;
-
-    //     // Log the 'd' attribute of each path with the class 'body_parts1'
-    //     $(svgDoc).find('path.body_parts1').each(function () {
-    //         console.log($(this).attr('d'));
-    //     });
-
-    //     // Attach click event to all paths
-    //     $(svgDoc).find('path').on('click', function () {
-    //         // Store the color of the clicked path
-    //         fillColor = $(this).attr('fill');
-
-    //         // Remove class and color from all paths
-    //         $('path').removeClass('body_parts1').attr('fill', fillColor);
-
-    //         // Add class and color to the clicked path
-    //         $(this).attr('fill', 'red').addClass('body_parts1');
-
-    //         console.log(fillColor);
-    //     }); 
-    // });
-    // $("body").on("click", ".selectImageArea", function() {
-    //     console.log("Clicked"); 
-
-    //     $('.svgObject:first').attr('id', 'svgObject');
-    // });
-    // $("body").on("click", ".svgObject", function () {
-    //         console.log('click..');
-    //         var svgDoc = $('.svgObject')[0].contentDocument;
-            
-    //         $(svgDoc).find('path').on('click', function() {
-    //             $(this).attr('fill', 'red').addClass('body_parts1');
-    //         });
-    //     });
-// });
-
-
-    // $(document).ready(function() {
-    //     $("body").on("click", ".svgObject", function () {
-    //         console.log('click..');
-    //         var svgDoc = $('.svgObject')[0].contentDocument;
-            
-    //         $(svgDoc).find('path').on('click', function() {
-    //             $(this).attr('fill', 'red').addClass('body_parts1');
-    //         });
-    //     });
-    // });
 </script>
 
 <script>
@@ -381,7 +332,8 @@
 
     // Check if there's only one body part
     if (bodyParts.length === 1) {
-        alert('Sorry, you cannot remove the last body part.');
+        NioApp.Toast('Sorry, you cannot remove the last body part.', 'error', {position: 'top-right'});
+        // alert('Sorry, you cannot remove the last body part.');
         return;
     }
 
@@ -400,7 +352,7 @@
                     var element = $(this);
                     dynamicClasses.forEach(function (className) {
                         if (element.hasClass(className)) {
-                            element.removeClass(className);
+                            element.removeClass(className).attr('data-selected', '');
                         }
                     });
                 });
@@ -411,7 +363,7 @@
     }
 
     bodyPart.remove();
-    console.log(dynamicClasses);
+    // console.log(dynamicClasses);
 });
 
 
@@ -430,26 +382,35 @@
         var bodyPart = $(this).closest('.bodyPart');
         var accentArea = bodyPart.find('.accentArea');
         var inputElement = bodyPart.find('.bodyTitle');
+        var bodyImage = bodyPart.find('.bodyImage');
         var title = inputElement.val();
-     
+
         if (title == '') {
-            alert('Please add your title first.');
+            NioApp.Toast('Please add your title first.', 'error', {position: 'top-right'});
+            // alert('Please add your title first.');
             return false;
         }
         if (title) {
-    var countVal = 0;
+            var countVal = 0;
 
-    $(".bodyPart input[type='text'] .bodyTitle").each(function () {
-        if ($(this).val().trim() === title.trim()) {
-            countVal++;
+            $(".bodyPart input[type='text'] .bodyTitle").each(function () {
+                if ($(this).val().trim() === title.trim()) {
+                    countVal++;
+                }
+            });
+
+            if (countVal > 1) {
+                NioApp.Toast('Please try a unique title.', 'error', {position: 'top-right'});
+                // alert('Please try a unique title.');
+                return false;
+            }
+            title = title.replace(/\s/g, '').toLowerCase();
         }
-    });
-
-    if (countVal > 1) {
-        alert('Please try a unique title.');
-        return false;
-    }
-}
+        if(bodyImage.val() == ''){
+            NioApp.Toast('Please add your Body Image first.', 'error', {position: 'top-right'});
+            return false;
+        }
+        // console.log(title);
 
         var accentHTML = `
            
@@ -466,7 +427,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="accentTitle${accentCount}">Accent Title</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" name="accentTitle[${title}][]" class="form-control ${title} accetntTitle" id="accentTitle${accentCount}" placeholder="Accent Title">
+                                            <input type="text" name="accentTitle[${title}][]" class="form-control ${title} accetntTitle" id="accentTitle${accentCount}" placeholder="Accent Title" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -476,7 +437,7 @@
                                         @enderror
                                         @foreach ($colors as $color)
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" value="{{ $color->id ?? '' }}" class="custom-control-input" id="color{{ $color->id ?? '' }}${title}${accentCount}" name="brand[${title}${accentCount}][]">
+                                                <input type="checkbox" value="{{ $color->id ?? '' }}" class="custom-control-input" id="color{{ $color->id ?? '' }}${title}${accentCount}" name="brand[${title}][]">
                                                 <label class="custom-control-label" for="color{{ $color->id ?? '' }}${title}${accentCount}">{{ $color->name ?? '' }}</label>
                                             </div>
                                         @endforeach
@@ -512,7 +473,7 @@
                 var allPaths = $(svgDoc).find('path');
                 allPaths.each(function () {
                     if ($(this).hasClass(Dclass)) {
-                        $(this).removeClass(Dclass);
+                        $(this).removeClass(Dclass).attr('data-selected', '');
                     }
                 });
             } else {

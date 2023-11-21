@@ -3,7 +3,7 @@
 <div class="nk-block nk-block-lg" id="maindiv">
     <div class="nk-block-head d-flex justify-content-between">
         <div class="nk-block-head-content">
-            <h4 class="nk-block-title">Brands Table</h4>
+            <h4 class="nk-block-title">Models Table</h4>
             <div class="nk-block-des">
                 <p><code class="code-class"></code> </p>
             </div>
@@ -22,16 +22,16 @@
                                 <label class="custom-control-label" for="page-0"></label>
                             </div>
                         </th>
-                        <th class="nk-tb-col"><span class="sub-text">Image</span></th>
-                        <th class="nk-tb-col"><span class="sub-text">Brand Name</span></th>
-                        <th class="nk-tb-col tb-col-mb"><span class="sub-text">Slug</span></th>
+                        <th class="nk-tb-col"><span class="sub-text">Model Name</span></th>
+                        <!-- <th class="nk-tb-col tb-col-mb"><span class="sub-text">Slug</span></th> -->
+                        <th class="nk-tb-col tb-col-mb"><span class="sub-text">Status</span></th>
                         <th class="nk-tb-col nk-tb-col-tools text-end">
                             Action
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($brands as $brand )
+                @foreach ($modals as $modal )
                     
                     <tr class="nk-tb-item tr">
                   
@@ -41,26 +41,28 @@
                                 <label class="custom-control-label" for=""></label>
                             </div>
                         </td> 
-                         <td class="nk-tb-col nk-tb-col-check">
-                            <div class="custom-control custom-control-sm custom-checkbox notext">
-                                <img src="{{ asset('brands_images/'.$brand->image) ?? '' }}" alt="">
-                            </div>
-                        </td>
+                  
                         
                         <td class="nk-tb-col">
                             <div class="user-card">
                                 <div class="user-info">
-                                  {{ $brand->name ?? '' }}
+                                  {{ $modal->name ?? '' }}
                                 </div>
                             </div>
                         </td>
 
-                        <td class="nk-tb-col tb-col-mb">
+                        <!-- <td class="nk-tb-col tb-col-mb">
                             <span class="tb-amount">
-                                {{ $brand->slug ?? '' }}
+                                {{ $modal->slug ?? '' }}
                             </span>
-                        </td>
+                        </td> -->
 
+                        <td class="nk-tb-col tb-col-mb">
+                        <span class="tb-odr-status">
+                            <span class="badge badge-dot bg-{{ $modal->status == 0 ? 'warning' : 'success' }}">{{ $modal->status == 0 ? 'Pending' : 'Complete' }}</span>
+                        </span>
+
+                        </td>
                         <td class="nk-tb-col nk-tb-col-tools">
                             <ul class="nk-tb-actions gx-1">
                                 <li class="d-flex">
@@ -70,9 +72,25 @@
                                         <div class="dropdown-menu dropdown-menu-end">
                                         
                                             <ul class="link-list-opt no-bdr">
-                                                 <li><a href="{{ url('admin-dashboard/brand-edit/'.$brand->slug) ?? '' }}"><em class="icon ni ni-pen"></em><span>Edit</span></a></li>
-                                              
-                                                <li><a data-url="{{ url('brandsRemove/'.$brand->slug) ?? '' }}" class="removeConfermation" data-id=""><em class="icon ni ni-trash"></em><span>Remove</span></a></li> 
+                                                @if($modal->status == 0)
+                                                 <li><a href="{{ url('admin-dashboard/add-model/'.$modal->slug) ?? '' }}"><em class="icon ni ni-pen"></em><span>Complete</span></a></li>
+                                                 @else
+                                                 <li><a class="updateModelData" data-url="{{ url('admin-dashboard/update-model/'.$modal->slug) ?? '' }}"><em class="icon ni ni-pen"></em><span>Update</span></a></li>
+
+                                                @endif
+                                                <li>
+                                                    <a data-url="{{ url('graphicRemove/'.$modal->slug) ?? '' }}" href="{{ url('graphicRemove/'.$modal->slug) ?? '' }}" class="removeConfermation" data-id="" >
+                                                        <em class="icon ni ni-trash"></em>
+                                                        <span>Remove</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('admin-dashboard/modelView/'.$modal->slug) ?? '' }}" class="" data-id="" >
+                                                        <i class="icon fas fa-eye"></i>
+                                                        <span>View</span>
+                                                    </a>
+                                                </li>
+
                                             </ul>
                                         </div>
                                     </div>
@@ -86,5 +104,26 @@
         </div>
     </div><!-- .card-preview -->
 </div> <!-- nk-block -->
+<script>
+
+    $('body').delegate('.updateModelData','click', function(e){
+        event.preventDefault();
+        url = $(this).attr('data-url');
+        Swal.fire({
+            title: "Are you sure?",
+            text: "If you want to update this you previous Body parts and Accent will be removed.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    });
+   
+</script>
 
 @endsection

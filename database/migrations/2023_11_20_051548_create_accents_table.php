@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modals', function (Blueprint $table) {
+        Schema::create('accents', function (Blueprint $table) {
             $table->id();
+            $table->integer('body_part_id');
             $table->string('name');
             $table->string('slug');
-            $table->string('brand');
-            $table->string('available_graphics');
-            $table->text('description');
-            $table->string('updatedImage');
-            $table->string('side_image');
-            $table->string('front_image');
-            $table->string('top_image');
-            $table->integer('status')->default(0); //O pending 1 wokring
+            $table->string('colors');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modals');
+        Schema::dropIfExists('accents');
     }
 };

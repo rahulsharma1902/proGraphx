@@ -19,6 +19,10 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
 
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v5.15.4/css/all.css">
+  
+    <!-- slick slider cdn -->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
 </head>
 
 <body class="nk-body bg-lighter npc-general has-sidebar ">
@@ -96,10 +100,10 @@
                                     </a>
                                     <ul class="nk-menu-sub">
                                         <li class="nk-menu-item">
-                                            <a href="{{ url('admin-dashboard/modals') }}" class="nk-menu-link"><span class="nk-menu-text">View</span></a>
+                                            <a href="{{ url('admin-dashboard/models') }}" class="nk-menu-link"><span class="nk-menu-text">View</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ url('admin-dashboard/add-modal') }}" class="nk-menu-link"><span class="nk-menu-text">Add</span></a>
+                                            <a href="{{ url('admin-dashboard/add-model') }}" class="nk-menu-link"><span class="nk-menu-text">Add</span></a>
                                         </li>
                                     </ul>
                                 </li>
@@ -270,13 +274,35 @@
         </div>
         <!-- main @e -->
     </div>
-    
+
     <!-- JavaScript -->
     <script src="{{ asset('admin-theme/assets/js/bundle.js?ver=3.1.2') }}"></script>
     <script src="{{ asset('admin-theme/assets/js/scripts.js?ver=3.1.2') }}"></script>
     <script src="{{ asset('admin-theme/assets/js/charts/gd-default.js?ver=3.1.2') }}"></script>
     <script src="{{ asset('admin-theme/assets/js/example-toastr.js?ver=3.1.2') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- remove confermation pop up -->
+    <script>
+        $('body').delegate('.removeConfermation','click', function(e){
+            event.preventDefault();
+            url = $(this).attr('data-url');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You lost your all related data if you remove this",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+            // console.log(url);
+        });
+    </script>
         @if(Session::get('error'))
         <script>
             toastr.clear();

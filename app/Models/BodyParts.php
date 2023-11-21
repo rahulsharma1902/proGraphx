@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Modals extends Model
+class BodyParts extends Model
 {
     use HasFactory;
-    public function bodyParts(){
-        return $this->hasMany(BodyParts::class,'model_id','id');
+    public function accents(){
+        return $this->hasMany(Accent::class,'body_part_id','id');
     }
 }

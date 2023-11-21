@@ -77,7 +77,7 @@
                                             <ul class="link-list-opt no-bdr">
                                                  <li><a href="{{ url('admin-dashboard/color-edit/'.$color->slug) ?? '' }}"><em class="icon ni ni-pen"></em><span>Edit</span></a></li>
                                               
-                                                <li><a href="{{ url('colorsRemove/'.$color->slug) ?? '' }}" class="remove" data-id=""><em class="icon ni ni-trash"></em><span>Remove</span></a></li> 
+                                                <li><a data-url="{{ url('colorsRemove/'.$color->slug) ?? '' }}" class="removeConfermation" data-id=""><em class="icon ni ni-trash"></em><span>Remove</span></a></li> 
                                             </ul>
                                         </div>
                                     </div>

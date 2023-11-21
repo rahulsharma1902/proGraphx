@@ -69,11 +69,17 @@ Route::group(['middleware'=>['auth','admin']],function(){
 
 
     //ModalsController
-    Route::get('admin-dashboard/add-modal',[ModalsController::class,'addModal']);
+    Route::get('admin-dashboard/models',[ModalsController::class,'index']);
+
+    Route::get('admin-dashboard/add-model',[ModalsController::class,'addModal']);
     Route::post('addModalProcc',[ModalsController::class,'addModalProcc']);
 
-    Route::get('admin-dashboard/add-modal/{slug}',[ModalsController::class,'addModalBodyPart']);
+    Route::get('admin-dashboard/add-model/{slug}',[ModalsController::class,'addModalBodyPart']);
     Route::post('addModalBodyPartProcc',[ModalsController::class,'addModalBodyPartProcc']);
+    
+    Route::get('admin-dashboard/modelView/{slug}',[ModalsController::class,'viewModel']);
+
+    
 
 });
 
